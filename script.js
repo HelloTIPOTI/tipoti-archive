@@ -5,193 +5,146 @@ let activeTags = [];
 let searchQuery = "";
 
 async function loadData(){
-  const res = await fetch("data.json");
-  DATA = await res.json();
-  renderFilters();
-  renderCards();
+ const res = await fetch("data.json");
+ DATA = await res.json();
+ renderFilters();
+ renderCards();
 }
 
-function normalize(text){
-  return String(text || "")
-    .toLowerCase()
-    .replace(/\s+/g,"");
+function normalize(t){
+ return String(t||"").toLowerCase().replace(/\s+/g,"");
 }
 
 function uniqueTags(){
-  const set = new Set();
-  DATA.forEach(item=>{
-    (item.tags || []).forEach(tag=>{
-      set.add(tag);
-    });
-  });
-  return [...set];
+ const set = new Set();
+ DATA.forEach(i=>{
+  (i.tags||[]).forEach(t=>set.add(t));
+ });
+ return [...set];
 }
 
 function renderFilters(){
 
-  const dayWrap = document.getElementById("dayFilter");
-  const tagWrap = document.getElementById("tagFilter");
+ const dayWrap=document.getElementById("dayFilter");
+ const tagWrap=document.getElementById("tagFilter");
 
-  const days = ["전체","월","화","수","목","금","토","일"];
+ const days=["전체","월","화","수","목","금","토","일"];
 
-  dayWrap.innerHTML="";
+ dayWrap.innerHTML="";
 
-  days.forEach(day=>{
+ days.forEach(day=>{
 
-    const btn = document.createElement("button");
+  const btn=document.createElement("button");
+  btn.className="pill"+(activeDay===day?" active":"");
+  btn.textContent=day;
 
-    btn.className = "pill" + (activeDay===day ? " active":"");
-    btn.textContent = day;
+  btn.onclick=()=>{
+   activeDay=day;
+   renderFilters();
+   renderCards();
+  };
 
-    btn.onclick = ()=>{
-      activeDay = day;
-      renderFilters();
-      renderCards();
-    };
+  dayWrap.appendChild(btn);
 
-    dayWrap.appendChild(btn);
+ });
 
-  });
+ tagWrap.innerHTML="";
 
-  tagWrap.innerHTML="";
+ uniqueTags().forEach(tag=>{
 
-  uniqueTags().forEach(tag=>{
+  const btn=document.createElement("button");
+  btn.className="pill"+(activeTags.includes(tag)?" active":"");
+  btn.textContent="#"+tag;
 
-    const btn = document.createElement("button");
+  btn.onclick=()=>{
 
-    btn.className = "pill" + (activeTags.includes(tag) ? " active":"");
-    btn.textContent = "#"+tag;
+   if(activeTags.includes(tag)){
+    activeTags=activeTags.filter(t=>t!==tag);
+   }else{
+    activeTags.push(tag);
+   }
 
-    btn.onclick = ()=>{
+   renderFilters();
+   renderCards();
+  };
 
-      if(activeTags.includes(tag)){
-        activeTags = activeTags.filter(t=>t!==tag);
-      }else{
-        activeTags.push(tag);
-      }
+  tagWrap.appendChild(btn);
 
-      renderFilters();
-      renderCards();
-    };
-
-    tagWrap.appendChild(btn);
-
-  });
+ });
 
 }
 
 function filteredData(){
 
-  const q = normalize(searchQuery);
+ const q=normalize(searchQuery);
 
-  return DATA.filter(item=>{
+ return DATA.filter(item=>{
 
-    const searchTarget = normalize(
-      item.title +
-      item.author +
-      (item.tags||[]).join("")
-    );
+  const searchTarget=normalize(
+   item.title + item.author + (item.tags||[]).join("")
+  );
 
-    const searchMatch =
-      q.length < 2
-      ? true
-      : searchTarget.includes(q);
+  const searchMatch=q.length<2?true:searchTarget.includes(q);
 
-    if(q.length >= 2){
-      return searchMatch;
-    }
+  if(q.length>=2) return searchMatch;
 
-    const dayMatch =
-      activeDay==="전체"
-      ? true
-      : item.day===activeDay;
+  const dayMatch=activeDay==="전체"?true:item.day===activeDay;
 
-    const tagMatch =
-      activeTags.length===0
-      ? true
-      : activeTags.every(tag =>
-          (item.tags||[]).includes(tag)
-        );
+  const tagMatch=activeTags.length===0
+   ? true
+   : activeTags.every(tag=>(item.tags||[]).includes(tag));
 
-    return dayMatch && tagMatch;
+  return dayMatch && tagMatch;
 
-  });
+ });
 
 }
 
 function renderCards(){
 
-  const wrap = document.getElementById("cards");
-  const list = filteredData();
+ const wrap=document.getElementById("cards");
+ const list=filteredData();
 
-  const countBox = document.getElementById("resultCount");
+ const count=document.getElementById("resultCount");
 
-  if(searchQuery.trim().length >= 2){
-    countBox.textContent = "검색 결과 "+list.length+"개";
-  }else{
-    countBox.textContent = "전체 "+list.length+"개 작품";
-  }
+ count.textContent="전체 "+list.length+"개 작품";
 
-  wrap.innerHTML = "";
+ wrap.innerHTML="";
 
-  if(list.length===0){
-    wrap.innerHTML="<div>검색 결과가 없습니다.</div>";
-    return;
-  }
+ list.forEach((item,index)=>{
 
-  list.forEach((item,index)=>{
+  const card=document.createElement("a");
+  card.className="card";
+  card.href="detail.html?id="+index;
 
-    const card = document.createElement("a");
+  card.innerHTML=`
+   <img class="card-thumb" src="${item.thumbnail}">
 
-    card.className = "card";
-    card.href = "detail.html?id="+(item.id||index);
+   <div class="card-body">
+    <div class="card-title">${item.title}</div>
+    <div class="card-author">${item.author}</div>
+    <div class="card-rating">★ ${item.rating}</div>
+    <div>
+    ${(item.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join("")}
+    </div>
+   </div>
+  `;
 
-    card.innerHTML = `
-      <img class="card-thumb" src="${item.thumbnail}">
+  wrap.appendChild(card);
 
-      <div class="card-body">
-
-        <h2 class="card-title">${item.title}</h2>
-
-        <div class="card-author">${item.author}</div>
-
-        <div class="card-rating">
-        <span class="star">★</span> ${item.rating}
-        </div>
-
-        <div>
-        ${(item.tags||[])
-          .map(tag=>`<span class="tag">#${tag}</span>`)
-          .join("")}
-        </div>
-
-      </div>
-    `;
-
-    wrap.appendChild(card);
-
-  });
+ });
 
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
 
-  const search = document.getElementById("searchInput");
+ const search=document.getElementById("searchInput");
 
-  search.addEventListener("input",(e)=>{
+ search.addEventListener("input",e=>{
+  searchQuery=e.target.value;
+  renderCards();
+ });
 
-    searchQuery = e.target.value;
-
-    if(searchQuery.trim().length >= 2){
-      activeDay = "전체";
-      activeTags = [];
-      renderFilters();
-    }
-
-    renderCards();
-
-  });
-
-  loadData();
+ loadData();
 
 });

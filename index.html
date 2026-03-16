@@ -1,8 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BL ARCHIVE</title>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -13,25 +13,22 @@
 <div class="brand">BL ARCHIVE</div>
 
 <div class="header-actions">
-<input id="searchInput" class="search-input" type="text" placeholder="제목 / 작가 검색">
-<a class="admin-link" href="admin.html">관리자</a>
+<input id="searchInput" class="search-input" placeholder="제목 / 작가 검색">
+<a href="admin.html">관리자</a>
 </div>
 </header>
 
-<main class="page">
+<div class="page">
 
-<section class="filters">
 <div id="dayFilter" class="pill-row"></div>
 <div id="tagFilter" class="pill-row"></div>
-</section>
 
 <div id="resultCount" class="result-count"></div>
 
-<section id="cards" class="card-grid"></section>
+<div id="cards" class="card-grid"></div>
 
-</main>
+</div>
 
 <script src="script.js"></script>
-
 </body>
 </html>

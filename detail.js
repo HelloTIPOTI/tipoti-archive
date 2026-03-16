@@ -1,72 +1,44 @@
 
 async function loadDetail(){
-  const params = new URLSearchParams(location.search);
-  const id = params.get("id");
 
-  const res = await fetch("data.json");
-  const data = await res.json();
+ const params=new URLSearchParams(location.search);
+ const id=params.get("id");
 
-  const item = data.find((x,i)=>String(x.id||i)===String(id));
+ const res=await fetch("data.json");
+ const data=await res.json();
 
-  const wrap = document.getElementById("detailWrap");
+ const item=data[id];
 
-  if(!item){
-    wrap.innerHTML="<p>작품 정보를 찾을 수 없습니다.</p>";
-    return;
-  }
+ const wrap=document.getElementById("detailWrap");
 
-  wrap.innerHTML=`
-  <a href="index.html" class="back-link">← 아카이브로 돌아가기</a>
+ wrap.innerHTML=`
 
-  <div class="detail-grid">
+ <a class="back-link" href="index.html">← 아카이브로 돌아가기</a>
 
-    <img class="detail-cover" src="${item.thumbnail}">
+ <div class="detail-grid">
 
-    <div>
+  <img class="detail-cover" src="${item.thumbnail}">
 
-      <h1 class="detail-title">${item.title}</h1>
+  <div>
 
-      <div class="meta-item">
-        <div class="meta-label">평점</div>
-        <div class="meta-value"><span class="star">★</span> ${item.rating}</div>
-      </div>
+   <div class="detail-title">${item.title}</div>
 
-      <div class="meta-item">
-        <div class="meta-label">회차</div>
-        <div class="meta-value">${item.episodes||"-"}</div>
-      </div>
+   <div class="meta-item"><div class="meta-label">평점</div><div>${item.rating}</div></div>
+   <div class="meta-item"><div class="meta-label">회차</div><div>${item.episodes}</div></div>
+   <div class="meta-item"><div class="meta-label">용량</div><div>${item.size}</div></div>
+   <div class="meta-item"><div class="meta-label">타입</div><div>${item.type}</div></div>
+   <div class="meta-item"><div class="meta-label">작가</div><div>${item.author}</div></div>
+   <div class="meta-item"><div class="meta-label">요일</div><div>${item.day}</div></div>
 
-      <div class="meta-item">
-        <div class="meta-label">용량</div>
-        <div class="meta-value">${item.size||"-"}</div>
-      </div>
-
-      <div class="meta-item">
-        <div class="meta-label">타입</div>
-        <div class="meta-value">${item.type||"-"}</div>
-      </div>
-
-      <div class="meta-item">
-        <div class="meta-label">작가</div>
-        <div class="meta-value">${item.author}</div>
-      </div>
-
-      <div class="meta-item">
-        <div class="meta-label">요일</div>
-        <div class="meta-value">${item.day||"-"}</div>
-      </div>
-
-      <div class="meta-item">
-        <div class="meta-label">태그</div>
-        <div class="meta-value">
-        ${(item.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("")}
-        </div>
-      </div>
-
-    </div>
+   <div class="meta-item">
+   <div class="meta-label">태그</div>
+   <div>${(item.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+   </div>
 
   </div>
-  `;
+
+ </div>
+ `;
 }
 
 document.addEventListener("DOMContentLoaded",loadDetail);

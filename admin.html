@@ -1,41 +1,47 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BL ARCHIVE 관리자</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>관리자</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="brand"><a href="index.html" class="brand-link">BL ARCHIVE</a></div>
-    <div class="header-actions">
-      <a class="admin-link" href="index.html">아카이브</a>
-    </div>
-  </header>
 
-  <main class="page">
-    <section class="admin-panel">
-      <h1 class="admin-title">웹툰 추가</h1>
+<header class="site-header">
+<div class="brand"><a href="index.html">BL ARCHIVE</a></div>
+</header>
 
-      <div class="admin-form">
-        <input id="title" placeholder="작품명">
-        <input id="author" placeholder="작가">
-        <input id="rating" placeholder="평점">
-        <input id="day" placeholder="요일 (월~일)">
-        <input id="episodes" placeholder="회차">
-        <input id="size" placeholder="용량">
-        <input id="type" placeholder="단행본 / 스크롤">
-        <input id="tags" placeholder="태그 (쉼표로 구분)">
-        <input id="thumb" placeholder="썸네일 경로 (img/xxx.jpg)">
-        <button onclick="generateJson()">JSON 생성</button>
-      </div>
+<div class="page">
 
-      <h2 class="admin-subtitle">data.json에 붙여넣기</h2>
-      <textarea id="output" class="json-output"></textarea>
-    </section>
-  </main>
+<div class="admin-panel">
 
-  <script src="admin.js"></script>
+<div class="admin-title">웹툰 추가</div>
+
+<div class="admin-form">
+<input id="title" placeholder="작품명">
+<input id="author" placeholder="작가">
+<input id="rating" placeholder="평점">
+<input id="day" placeholder="요일 (월~일)">
+<input id="episodes" placeholder="회차">
+<input id="size" placeholder="용량">
+<input id="type" placeholder="단행본 / 스크롤">
+<input id="tags" placeholder="태그 (쉼표 구분)">
+<input id="thumb" placeholder="썸네일 경로 img/xxx.jpg">
+
+<button onclick="generate()">JSON 생성</button>
+</div>
+
+<div class="admin-title">data.json에 붙여넣기</div>
+
+<textarea id="output" class="json-output"></textarea>
+
+</div>
+
+</div>
+
+<script src="admin.js"></script>
+
 </body>
 </html>
