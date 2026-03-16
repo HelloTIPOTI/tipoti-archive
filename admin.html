@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>관리자</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+<h1>웹툰 추가</h1>
+<a href="index.html">아카이브</a>
+</header>
+
+<div style="padding:40px">
+
+<input id="title" placeholder="작품명"><br><br>
+<input id="author" placeholder="작가"><br><br>
+<input id="rating" placeholder="평점"><br><br>
+<input id="thumb" placeholder="썸네일 경로 (img/xxx.jpg)"><br><br>
+
+<button onclick="add()">추가</button>
+
+<h3>JSON 출력</h3>
+<textarea id="output" style="width:100%;height:200px"></textarea>
+
+</div>
+
+<script src="admin.js"></script>
+</body>
+</html>

@@ -1,24 +1,8 @@
 [
-  {
-    "title": "솔트 소사이어티",
-    "author": "제스",
-    "rating": 4.9,
-    "day": "화",
-    "tags": [
-      "다정공",
-      "연상공"
-    ],
-    "cover": "https://picsum.photos/300/400?1"
-  },
-  {
-    "title": "일간알바",
-    "author": "단비",
-    "rating": 4.8,
-    "day": "월",
-    "tags": [
-      "집착공",
-      "미인수"
-    ],
-    "cover": "https://picsum.photos/300/400?2"
-  }
+ {
+  "title":"솔트 소사이어티",
+  "author":"제스",
+  "rating":"4.9",
+  "thumbnail":"img/sample1.jpg"
+ }
 ]

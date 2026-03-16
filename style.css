@@ -1,11 +1,42 @@
+body{
+ font-family:system-ui;
+ background:#f5f5f5;
+ margin:0;
+}
 
-body{font-family:sans-serif;margin:0;background:#fafafa;}
-.header{display:flex;justify-content:space-between;padding:20px;background:white;border-bottom:1px solid #eee;}
-.filters{padding:20px;}
-#dayFilter button,#tagFilter button{margin:4px;padding:6px 10px;border-radius:20px;border:0;background:#eee;cursor:pointer;}
-#dayFilter .active{background:black;color:white;}
-#grid{display:grid;grid-template-columns:repeat(auto-fill,200px);gap:20px;padding:20px;}
-.card{background:white;border-radius:12px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
-.card img{width:100%;height:260px;object-fit:cover;}
-.meta{padding:10px;}
-.rating{color:#e53935;font-size:13px;}
+.top{
+ display:flex;
+ justify-content:space-between;
+ padding:20px 40px;
+ background:white;
+ box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+.admin-link{
+ text-decoration:none;
+ font-size:14px;
+}
+
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fill,200px);
+ gap:30px;
+ padding:40px;
+}
+
+.card{
+ background:white;
+ border-radius:12px;
+ overflow:hidden;
+ box-shadow:0 4px 20px rgba(0,0,0,0.1);
+}
+
+.card img{
+ width:100%;
+ height:260px;
+ object-fit:cover;
+}
+
+.info{
+ padding:12px;
+}
