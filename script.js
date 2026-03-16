@@ -3,6 +3,7 @@ let DATA=[];
 let activeDay="전체";
 let activeTags=[];
 let searchQuery="";
+let visibleCount=20;
 
 async function loadData(){
  const res=await fetch("data.json");
@@ -40,6 +41,7 @@ function renderFilters(){
 
   btn.onclick=()=>{
    activeDay=day;
+   visibleCount=20;
    renderFilters();
    renderCards();
   };
@@ -64,6 +66,7 @@ function renderFilters(){
     activeTags.push(tag);
    }
 
+   visibleCount=20;
    renderFilters();
    renderCards();
 
@@ -108,6 +111,7 @@ function renderCards(){
  const list=filteredData();
 
  const count=document.getElementById("resultCount");
+ const btn=document.getElementById("loadMoreBtn");
 
  if(searchQuery.trim().length>=2){
   count.textContent="검색 결과 "+list.length+"개";
@@ -117,7 +121,7 @@ function renderCards(){
 
  wrap.innerHTML="";
 
- list.forEach((item,index)=>{
+ list.slice(0,visibleCount).forEach((item,index)=>{
 
   const card=document.createElement("a");
   card.className="card";
@@ -145,15 +149,23 @@ function renderCards(){
 
  });
 
+ if(visibleCount>=list.length){
+  btn.style.display="none";
+ }else{
+  btn.style.display="inline-block";
+ }
+
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
 
  const search=document.getElementById("searchInput");
+ const loadBtn=document.getElementById("loadMoreBtn");
 
  search.addEventListener("input",e=>{
 
   searchQuery=e.target.value;
+  visibleCount=20;
 
   if(searchQuery.trim().length>=2){
    activeDay="전체";
@@ -163,6 +175,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   renderCards();
 
+ });
+
+ loadBtn.addEventListener("click",()=>{
+  visibleCount+=20;
+  renderCards();
  });
 
  loadData();

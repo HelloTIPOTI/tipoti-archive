@@ -1,17 +1,17 @@
 
 async function loadDetail(){
 
- const params = new URLSearchParams(location.search);
- const id = params.get("id");
+ const params=new URLSearchParams(location.search);
+ const id=params.get("id");
 
- const res = await fetch("data.json");
- const data = await res.json();
+ const res=await fetch("data.json");
+ const data=await res.json();
 
- const item = data[id];
+ const item=data[id];
 
- const wrap = document.getElementById("detailWrap");
+ const wrap=document.getElementById("detailWrap");
 
- wrap.innerHTML = `
+ wrap.innerHTML=`
 
  <a href="javascript:history.back()" class="back-link">← 아카이브로 돌아가기</a>
 
@@ -25,21 +25,21 @@ async function loadDetail(){
 
  <div class="meta-item">
  <div class="meta-label">평점</div>
- <div class="meta-value"><span class="detail-star">★</span> ${item.rating}</div>
+ <div><span class="detail-star">★</span> ${item.rating}</div>
  </div>
 
- <div class="meta-item"><div class="meta-label">회차</div><div class="meta-value">${item.episodes}</div></div>
+ <div class="meta-item"><div class="meta-label">회차</div><div>${item.episodes}</div></div>
 
- <div class="meta-item"><div class="meta-label">용량</div><div class="meta-value">${item.size}</div></div>
+ <div class="meta-item"><div class="meta-label">용량</div><div>${item.size}</div></div>
 
- <div class="meta-item"><div class="meta-label">타입</div><div class="meta-value">${item.type}</div></div>
+ <div class="meta-item"><div class="meta-label">타입</div><div>${item.type}</div></div>
 
- <div class="meta-item"><div class="meta-label">작가</div><div class="meta-value">${item.author}</div></div>
+ <div class="meta-item"><div class="meta-label">작가</div><div>${item.author}</div></div>
 
- <div class="meta-item"><div class="meta-label">요일</div><div class="meta-value">${item.day}</div></div>
+ <div class="meta-item"><div class="meta-label">요일</div><div>${item.day}</div></div>
 
  <div class="meta-item"><div class="meta-label">태그</div>
- <div class="meta-value">
+ <div>
  ${(item.tags||[]).map(t=>`<span class="tag">${t}</span>`).join("")}
  </div>
  </div>
@@ -50,4 +50,4 @@ async function loadDetail(){
  `;
 }
 
-document.addEventListener("DOMContentLoaded", loadDetail);
+document.addEventListener("DOMContentLoaded",loadDetail);
