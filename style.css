@@ -8,7 +8,7 @@ background:#f6f6f8;
 color:#111;
 }
 
-a{ text-decoration:none; color:inherit; }
+a{text-decoration:none;color:inherit;}
 
 /* HEADER */
 
@@ -68,9 +68,7 @@ cursor:pointer;
 transition:.15s;
 }
 
-.pill:hover{
-background:#f3f3f3;
-}
+.pill:hover{background:#f3f3f3;}
 
 .pill.active{
 background:#111;
@@ -86,7 +84,7 @@ color:#777;
 margin:14px 0 20px 0;
 }
 
-/* CARD GRID */
+/* CARDS */
 
 .card-grid{
 display:grid;
@@ -114,9 +112,7 @@ object-fit:cover;
 background:#eee;
 }
 
-.card-body{
-padding:12px;
-}
+.card-body{padding:12px;}
 
 .card-title{
 font-size:15px;
@@ -129,7 +125,10 @@ font-size:12px;
 color:#777;
 }
 
+/* CARD rating red */
+
 .card-rating{
+color:#e02424;
 font-size:13px;
 margin-top:4px;
 font-weight:600;
@@ -194,6 +193,13 @@ color:#555;
 font-weight:500;
 }
 
+/* Detail star only red */
+
+.detail-star{
+color:#e02424;
+font-weight:700;
+}
+
 /* ADMIN */
 
 .admin-panel{
@@ -239,20 +245,4 @@ border:1px solid #ccc;
 border-radius:10px;
 padding:10px;
 font-family:monospace;
-}
-
-/* RIDI style rating color */
-
-.card-rating{
-color:#e02424;
-font-weight:700;
-}
-
-.detail-rating{
-color:#e02424;
-font-weight:700;
-}
-
-.star{
-color:#e02424;
 }
