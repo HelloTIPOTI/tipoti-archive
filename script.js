@@ -3,6 +3,10 @@ let activeDay = "전체";
 let activeTags = [];
 let searchQuery = "";
 
+function normalize(text){
+  return String(text || "").toLowerCase().replace(/\s+/g, "");
+}
+
 async function loadData(){
   const res = await fetch("data.json");
   DATA = await res.json();
@@ -53,11 +57,12 @@ function renderFilters(){
 }
 
 function filteredData(){
+  const q = normalize(searchQuery);
   return DATA.filter(item => {
     const dayMatch = activeDay === "전체" ? true : item.day === activeDay;
     const tagMatch = activeTags.length === 0 ? true : activeTags.every(tag => (item.tags || []).includes(tag));
-    const q = searchQuery.trim().toLowerCase();
-    const searchMatch = !q ? true : [item.title, item.author].join(" ").toLowerCase().includes(q);
+    const searchTarget = normalize([item.title, item.author].join(" "));
+    const searchMatch = !q ? true : searchTarget.includes(q);
     return dayMatch && tagMatch && searchMatch;
   });
 }
@@ -94,9 +99,13 @@ function renderCards(){
 
 document.addEventListener("DOMContentLoaded", () => {
   const search = document.getElementById("searchInput");
-  search.addEventListener("input", e => {
-    searchQuery = e.target.value;
+  const syncSearch = e => {
+    searchQuery = e.target.value || "";
     renderCards();
-  });
+  };
+  search.addEventListener("input", syncSearch);
+  search.addEventListener("change", syncSearch);
+  search.addEventListener("keyup", syncSearch);
+  search.addEventListener("compositionend", syncSearch);
   loadData();
 });
