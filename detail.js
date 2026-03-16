@@ -1,19 +1,19 @@
 
 async function loadDetail(){
 
- const params=new URLSearchParams(location.search);
- const id=params.get("id");
+ const params = new URLSearchParams(location.search);
+ const id = params.get("id");
 
- const res=await fetch("data.json");
- const data=await res.json();
+ const res = await fetch("data.json");
+ const data = await res.json();
 
- const item=data[id];
+ const item = data[id];
 
- const wrap=document.getElementById("detailWrap");
+ const wrap = document.getElementById("detailWrap");
 
- wrap.innerHTML=`
+ wrap.innerHTML = `
 
- <a href="index.html" class="back-link">← 아카이브로 돌아가기</a>
+ <a href="javascript:history.back()" class="back-link">← 아카이브로 돌아가기</a>
 
  <div class="detail-grid">
 
@@ -50,4 +50,4 @@ async function loadDetail(){
  `;
 }
 
-document.addEventListener("DOMContentLoaded",loadDetail);
+document.addEventListener("DOMContentLoaded", loadDetail);
