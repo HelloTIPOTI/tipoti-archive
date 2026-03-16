@@ -10,6 +10,8 @@ color:#111;
 
 a{ text-decoration:none; color:inherit; }
 
+/* HEADER */
+
 .site-header{
 display:flex;
 justify-content:space-between;
@@ -20,10 +22,12 @@ border-bottom:1px solid #e8e8e8;
 }
 
 .brand{
-font-size:24px;
+font-size:24px; /* smaller */
 font-weight:800;
 letter-spacing:-0.02em;
 }
+
+/* SEARCH */
 
 .header-actions{
 display:flex;
@@ -39,17 +43,21 @@ font-size:14px;
 width:220px;
 }
 
+/* PAGE */
+
 .page{
 max-width:1400px;
 margin:auto;
 padding:36px;
 }
 
+/* ===== RIDI STYLE FILTER TABS ===== */
+
 .pill-row{
 display:flex;
 flex-wrap:wrap;
 gap:8px;
-margin-bottom:12px;
+margin-bottom:14px;
 }
 
 .pill{
@@ -72,14 +80,15 @@ color:white;
 border-color:#111;
 }
 
-/* 핵심 수정 */
+/* RESULT */
+
 .result-count{
 font-size:13px;
 color:#777;
-margin:40px 0;
+margin:10px 0 24px 0;
 }
 
-/* cards */
+/* ===== CARD GRID ===== */
 
 .card-grid{
 display:grid;
@@ -137,6 +146,8 @@ color:#ff3b3b;
 font-size:14px;
 }
 
+/* TAG */
+
 .tag{
 background:#f2f2f2;
 border-radius:10px;
@@ -147,6 +158,8 @@ display:inline-block;
 margin-top:4px;
 }
 
+/* ===== DETAIL ===== */
+
 .detail-wrap{
 background:white;
 border-radius:26px;
@@ -156,7 +169,7 @@ box-shadow:0 6px 22px rgba(0,0,0,0.06);
 
 .back-link{
 display:inline-block;
-margin-bottom:32px;
+margin-bottom:32px; /* bigger spacing */
 color:#666;
 font-size:14px;
 }
@@ -195,4 +208,51 @@ color:#555;
 .meta-value{
 color:#111;
 font-weight:500;
+}
+
+/* ADMIN */
+
+.admin-panel{
+background:white;
+border-radius:22px;
+padding:28px;
+box-shadow:0 6px 22px rgba(0,0,0,0.06);
+}
+
+.admin-title{
+font-size:24px;
+font-weight:800;
+margin-bottom:18px;
+}
+
+.admin-form{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-bottom:28px;
+}
+
+.admin-form input{
+padding:10px 12px;
+border-radius:10px;
+border:1px solid #ccc;
+font-size:14px;
+}
+
+.admin-form button{
+padding:10px 14px;
+border:0;
+border-radius:10px;
+background:#111;
+color:white;
+cursor:pointer;
+}
+
+.json-output{
+width:100%;
+height:120px;
+border:1px solid #ccc;
+border-radius:10px;
+padding:10px;
+font-family:monospace;
 }
