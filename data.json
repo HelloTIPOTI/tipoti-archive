@@ -1,8 +1,13 @@
 [
- {
-  "title":"솔트 소사이어티",
-  "author":"제스",
-  "rating":"4.9",
-  "thumbnail":"img/sample1.jpg"
- }
+  {
+    "title": "솔트 소사이어티",
+    "author": "제스",
+    "rating": "4.9",
+    "day": "화",
+    "tags": [
+      "연상공",
+      "집착공"
+    ],
+    "thumbnail": "img/sample.jpg"
+  }
 ]

@@ -1,22 +1,16 @@
-let data=[];
+function generate(){
 
-async function init(){
- const res = await fetch('data.json');
- data = await res.json();
-}
-init();
+const item={
 
-function add(){
+title:document.getElementById("title").value,
+author:document.getElementById("author").value,
+rating:document.getElementById("rating").value,
+day:document.getElementById("day").value,
+tags:document.getElementById("tags").value.split(","),
+thumbnail:document.getElementById("thumb").value
 
- const item={
-  title:document.getElementById("title").value,
-  author:document.getElementById("author").value,
-  rating:document.getElementById("rating").value,
-  thumbnail:document.getElementById("thumb").value
- };
+};
 
- data.push(item);
+document.getElementById("output").value=JSON.stringify(item,null,2);
 
- document.getElementById("output").value =
- JSON.stringify(data,null,2);
 }
