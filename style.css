@@ -161,8 +161,23 @@ font-weight:800;
 margin-bottom:20px;
 }
 
+/* ⭐ 핵심 수정: 항목과 내용 가로 정렬 */
+
 .meta-item{
-margin-bottom:10px;
+display:flex;
+align-items:center;
+gap:12px;
+margin-bottom:12px;
+}
+
+.meta-label{
+min-width:80px;
+font-weight:700;
+color:#555;
+}
+
+.meta-value{
+color:#111;
 }
 
 /* ===== Admin Page ===== */
