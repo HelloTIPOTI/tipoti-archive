@@ -147,40 +147,25 @@ function renderCards(){
     card.href = "detail.html?id="+(item.id||index);
 
     card.innerHTML = `
-    
-    <div class="card-thumb-wrap">
-
       <img class="card-thumb" src="${item.thumbnail}">
 
-      ${
-        item.type === "단행본"
-        ? `<div class="type-badge">단행본</div>`
-        : ``
-      }
+      <div class="card-body">
 
-    </div>
+        <h2 class="card-title">${item.title}</h2>
 
-    <div class="card-body">
+        <div class="card-author">${item.author}</div>
 
-      <h2 class="card-title">
-      ${item.title}
-      </h2>
+        <div class="card-rating">
+        <span class="star">★</span> ${item.rating}
+        </div>
 
-      <div class="card-author">
-      ${item.author}
+        <div>
+        ${(item.tags||[])
+          .map(tag=>`<span class="tag">#${tag}</span>`)
+          .join("")}
+        </div>
+
       </div>
-
-      <div class="card-rating">
-      <span class="star">★</span> ${item.rating}
-      </div>
-
-      <div>
-      ${(item.tags||[])
-        .map(tag=>`<span class="tag">#${tag}</span>`)
-        .join("")}
-      </div>
-
-    </div>
     `;
 
     wrap.appendChild(card);

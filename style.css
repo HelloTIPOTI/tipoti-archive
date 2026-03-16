@@ -1,18 +1,9 @@
 
-/* 단행본 배지 */
+/* badge 관련 코드 제거된 기본 스타일만 유지 */
 
-.card-thumb-wrap{
-position:relative;
-}
-
-.type-badge{
-position:absolute;
-left:10px;
-bottom:10px;
-background:#00a99d;
-color:white;
-font-size:12px;
-font-weight:600;
-padding:4px 8px;
-border-radius:6px;
+.card-thumb{
+width:100%;
+aspect-ratio:2/3;
+object-fit:cover;
+background:#eee;
 }
