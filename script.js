@@ -10,6 +10,12 @@ async function loadData(){
   renderCards();
 }
 
+function normalize(text){
+  return String(text || "")
+    .toLowerCase()
+    .replace(/\s+/g,"");
+}
+
 function uniqueTags(){
   const set = new Set();
   DATA.forEach(item=>{
@@ -26,6 +32,7 @@ function renderFilters(){
   const days=["전체","월","화","수","목","금","토","일"];
 
   dayWrap.innerHTML="";
+
   days.forEach(day=>{
 
     const btn=document.createElement("button");
@@ -43,6 +50,7 @@ function renderFilters(){
   });
 
   tagWrap.innerHTML="";
+
   uniqueTags().forEach(tag=>{
 
     const btn=document.createElement("button");
@@ -70,23 +78,35 @@ function renderFilters(){
 
 function filteredData(){
 
-  const q = searchQuery.toLowerCase();
+  const q = normalize(searchQuery);
 
   return DATA.filter(item=>{
 
-    const dayMatch = activeDay==="전체" ? true : item.day===activeDay;
-
-    const tagMatch = activeTags.length===0
-      ? true
-      : activeTags.every(tag => (item.tags||[]).includes(tag));
-
-    const searchText = (item.title + " " + item.author).toLowerCase();
+    // 검색용 텍스트
+    const searchTarget = normalize(
+      item.title +
+      item.author +
+      (item.tags || []).join("")
+    );
 
     const searchMatch = q===""
       ? true
-      : searchText.includes(q);
+      : searchTarget.includes(q);
 
-    return dayMatch && tagMatch && searchMatch;
+    // 검색 중이면 필터 무시
+    if(q){
+      return searchMatch;
+    }
+
+    const dayMatch =
+      activeDay==="전체" ? true : item.day===activeDay;
+
+    const tagMatch =
+      activeTags.length===0
+        ? true
+        : activeTags.every(tag => (item.tags||[]).includes(tag));
+
+    return dayMatch && tagMatch;
 
   });
 
@@ -133,8 +153,18 @@ document.addEventListener("DOMContentLoaded",()=>{
   const search=document.getElementById("searchInput");
 
   search.addEventListener("input",(e)=>{
+
     searchQuery=e.target.value;
+
+    // 검색 시작하면 필터 초기화
+    if(searchQuery.trim() !== ""){
+      activeDay="전체";
+      activeTags=[];
+      renderFilters();
+    }
+
     renderCards();
+
   });
 
   loadData();
