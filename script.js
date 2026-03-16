@@ -1,183 +1,183 @@
 
-let DATA=[];
-let activeDay="전체";
-let activeTags=[];
-let searchQuery="";
+let DATA = [];
+let activeDay = "전체";
+let activeTags = [];
+let searchQuery = "";
 
 async function loadData(){
-
-const res = await fetch("data.json");
-DATA = await res.json();
-
-renderFilters();
-renderCards();
-
+  const res = await fetch("data.json");
+  DATA = await res.json();
+  renderFilters();
+  renderCards();
 }
 
 function normalize(text){
-
-return String(text||"")
-.toLowerCase()
-.replace(/\s+/g,"");
-
+  return String(text || "")
+    .toLowerCase()
+    .replace(/\s+/g,"");
 }
 
 function uniqueTags(){
-
-const set=new Set();
-
-DATA.forEach(item=>{
-(item.tags||[]).forEach(tag=>set.add(tag));
-});
-
-return [...set];
-
+  const set = new Set();
+  DATA.forEach(item=>{
+    (item.tags || []).forEach(tag=>set.add(tag));
+  });
+  return [...set];
 }
 
 function renderFilters(){
 
-const dayWrap=document.getElementById("dayFilter");
-const tagWrap=document.getElementById("tagFilter");
+  const dayWrap = document.getElementById("dayFilter");
+  const tagWrap = document.getElementById("tagFilter");
 
-const days=["전체","월","화","수","목","금","토","일"];
+  const days=["전체","월","화","수","목","금","토","일"];
 
-dayWrap.innerHTML="";
+  dayWrap.innerHTML="";
 
-days.forEach(day=>{
+  days.forEach(day=>{
 
-const btn=document.createElement("button");
-btn.className="pill"+(activeDay===day?" active":"");
-btn.textContent=day;
+    const btn=document.createElement("button");
+    btn.className="pill"+(activeDay===day?" active":"");
+    btn.textContent=day;
 
-btn.onclick=()=>{
+    btn.onclick=()=>{
+      activeDay=day;
+      renderFilters();
+      renderCards();
+    };
 
-activeDay=day;
-renderFilters();
-renderCards();
+    dayWrap.appendChild(btn);
 
-};
+  });
 
-dayWrap.appendChild(btn);
+  tagWrap.innerHTML="";
 
-});
+  uniqueTags().forEach(tag=>{
 
-tagWrap.innerHTML="";
+    const btn=document.createElement("button");
+    btn.className="pill"+(activeTags.includes(tag)?" active":"");
+    btn.textContent="#"+tag;
 
-uniqueTags().forEach(tag=>{
+    btn.onclick=()=>{
 
-const btn=document.createElement("button");
-btn.className="pill"+(activeTags.includes(tag)?" active":"");
-btn.textContent="#"+tag;
+      if(activeTags.includes(tag)){
+        activeTags=activeTags.filter(t=>t!==tag);
+      }else{
+        activeTags.push(tag);
+      }
 
-btn.onclick=()=>{
+      renderFilters();
+      renderCards();
 
-if(activeTags.includes(tag)){
-activeTags=activeTags.filter(t=>t!==tag);
-}else{
-activeTags.push(tag);
-}
+    };
 
-renderFilters();
-renderCards();
+    tagWrap.appendChild(btn);
 
-};
-
-tagWrap.appendChild(btn);
-
-});
+  });
 
 }
 
 function filteredData(){
 
-const q = normalize(searchQuery);
+  const q = normalize(searchQuery);
 
-return DATA.filter(item=>{
+  return DATA.filter(item=>{
 
-const searchTarget = normalize(
-item.title + item.author + (item.tags||[]).join("")
-);
+    const searchTarget = normalize(
+      item.title +
+      item.author +
+      (item.tags||[]).join("")
+    );
 
-const searchMatch = q=="" ? true : searchTarget.includes(q);
+    // ⭐ 최소 2글자 검색
+    const searchMatch =
+      q.length < 2
+        ? true
+        : searchTarget.includes(q);
 
-if(q){
-return searchMatch;
-}
+    // 검색 중이면 요일/태그 필터 무시
+    if(q.length >= 2){
+      return searchMatch;
+    }
 
-const dayMatch = activeDay==="전체" ? true : item.day===activeDay;
+    const dayMatch =
+      activeDay==="전체"
+        ? true
+        : item.day===activeDay;
 
-const tagMatch = activeTags.length===0
-? true
-: activeTags.every(tag => (item.tags||[]).includes(tag));
+    const tagMatch =
+      activeTags.length===0
+        ? true
+        : activeTags.every(tag => (item.tags||[]).includes(tag));
 
-return dayMatch && tagMatch;
+    return dayMatch && tagMatch;
 
-});
+  });
 
 }
 
 function renderCards(){
 
-const wrap=document.getElementById("cards");
-const list=filteredData();
+  const wrap=document.getElementById("cards");
+  const list=filteredData();
 
-const countBox=document.getElementById("resultCount");
+  const countBox=document.getElementById("resultCount");
 
-if(searchQuery.trim()!==""){
-countBox.textContent="검색 결과 "+list.length+"개";
-}else{
-countBox.textContent="전체 "+list.length+"개 작품";
-}
+  if(searchQuery.trim().length >= 2){
+    countBox.textContent="검색 결과 "+list.length+"개";
+  }else{
+    countBox.textContent="전체 "+list.length+"개 작품";
+  }
 
-wrap.innerHTML="";
+  wrap.innerHTML="";
 
-if(list.length===0){
-wrap.innerHTML='<div>검색 결과가 없습니다.</div>';
-return;
-}
+  if(list.length===0){
+    wrap.innerHTML='<div>검색 결과가 없습니다.</div>';
+    return;
+  }
 
-list.forEach((item,index)=>{
+  list.forEach((item,index)=>{
 
-const card=document.createElement("a");
-card.className="card";
-card.href="detail.html?id="+(item.id||index);
+    const card=document.createElement("a");
+    card.className="card";
+    card.href="detail.html?id="+(item.id||index);
 
-card.innerHTML=`
-<img class="card-thumb" src="${item.thumbnail}">
-<div class="card-body">
-<h2 class="card-title">${item.title}</h2>
-<div class="card-author">${item.author}</div>
-<div class="card-rating">⭐ ${item.rating}</div>
-<div>
-${(item.tags||[]).map(tag=>`<span class="tag">#${tag}</span>`).join("")}
-</div>
-</div>
-`;
+    card.innerHTML=`
+      <img class="card-thumb" src="${item.thumbnail}">
+      <div class="card-body">
+        <h2 class="card-title">${item.title}</h2>
+        <div class="card-author">${item.author}</div>
+        <div class="card-rating">⭐ ${item.rating}</div>
+        <div>
+          ${(item.tags||[]).map(tag=>`<span class="tag">#${tag}</span>`).join("")}
+        </div>
+      </div>
+    `;
 
-wrap.appendChild(card);
+    wrap.appendChild(card);
 
-});
+  });
 
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
 
-const search=document.getElementById("searchInput");
+  const search=document.getElementById("searchInput");
 
-search.addEventListener("input",(e)=>{
+  search.addEventListener("input",(e)=>{
 
-searchQuery=e.target.value;
+    searchQuery=e.target.value;
 
-if(searchQuery.trim()!==""){
-activeDay="전체";
-activeTags=[];
-renderFilters();
-}
+    if(searchQuery.trim().length >= 2){
+      activeDay="전체";
+      activeTags=[];
+      renderFilters();
+    }
 
-renderCards();
+    renderCards();
 
-});
+  });
 
-loadData();
+  loadData();
 
 });
