@@ -1,29 +1,37 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BL ARCHIVE</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BL ARCHIVE</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="brand">BL ARCHIVE</div>
-    <div class="header-actions">
-      <input id="searchInput" class="search-input" type="text" placeholder="제목 / 작가 검색">
-      <a class="admin-link" href="admin.html">관리자</a>
-    </div>
-  </header>
 
-  <main class="page">
-    <section class="filters">
-      <div id="dayFilter" class="pill-row"></div>
-      <div id="tagFilter" class="pill-row"></div>
-    </section>
+<header class="site-header">
+<div class="brand">BL ARCHIVE</div>
 
-    <section id="cards" class="card-grid"></section>
-  </main>
+<div class="header-actions">
+<input id="searchInput" class="search-input" type="text" placeholder="제목 / 작가 검색">
+<a class="admin-link" href="admin.html">관리자</a>
+</div>
+</header>
 
-  <script src="script.js"></script>
+<main class="page">
+
+<section class="filters">
+<div id="dayFilter" class="pill-row"></div>
+<div id="tagFilter" class="pill-row"></div>
+</section>
+
+<div id="resultCount" class="result-count"></div>
+
+<section id="cards" class="card-grid"></section>
+
+</main>
+
+<script src="script.js"></script>
+
 </body>
 </html>
