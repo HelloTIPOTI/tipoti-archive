@@ -89,13 +89,11 @@ function filteredData(){
       (item.tags||[]).join("")
     );
 
-    // ⭐ 최소 2글자 검색
     const searchMatch =
       q.length < 2
         ? true
         : searchTarget.includes(q);
 
-    // 검색 중이면 요일/태그 필터 무시
     if(q.length >= 2){
       return searchMatch;
     }
@@ -147,7 +145,7 @@ function renderCards(){
       <div class="card-body">
         <h2 class="card-title">${item.title}</h2>
         <div class="card-author">${item.author}</div>
-        <div class="card-rating">⭐ ${item.rating}</div>
+        <div class="card-rating"><span class="star">★</span> ${item.rating}</div>
         <div>
           ${(item.tags||[]).map(tag=>`<span class="tag">#${tag}</span>`).join("")}
         </div>
