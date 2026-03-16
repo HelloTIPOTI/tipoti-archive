@@ -1,12 +1,12 @@
 
-let DATA = [];
-let activeDay = "전체";
-let activeTags = [];
-let searchQuery = "";
+let DATA=[];
+let activeDay="전체";
+let activeTags=[];
+let searchQuery="";
 
 async function loadData(){
- const res = await fetch("data.json");
- DATA = await res.json();
+ const res=await fetch("data.json");
+ DATA=await res.json();
  renderFilters();
  renderCards();
 }
@@ -16,7 +16,7 @@ function normalize(t){
 }
 
 function uniqueTags(){
- const set = new Set();
+ const set=new Set();
  DATA.forEach(i=>{
   (i.tags||[]).forEach(t=>set.add(t));
  });
@@ -66,6 +66,7 @@ function renderFilters(){
 
    renderFilters();
    renderCards();
+
   };
 
   tagWrap.appendChild(btn);
@@ -80,11 +81,12 @@ function filteredData(){
 
  return DATA.filter(item=>{
 
-  const searchTarget=normalize(
+  const text=normalize(
    item.title + item.author + (item.tags||[]).join("")
   );
 
-  const searchMatch=q.length<2?true:searchTarget.includes(q);
+  const searchMatch =
+   q.length<2 ? true : text.includes(q);
 
   if(q.length>=2) return searchMatch;
 
@@ -107,7 +109,11 @@ function renderCards(){
 
  const count=document.getElementById("resultCount");
 
- count.textContent="전체 "+list.length+"개 작품";
+ if(searchQuery.trim().length>=2){
+  count.textContent="검색 결과 "+list.length+"개";
+ }else{
+  count.textContent="전체 "+list.length+"개 작품";
+ }
 
  wrap.innerHTML="";
 
@@ -121,12 +127,17 @@ function renderCards(){
    <img class="card-thumb" src="${item.thumbnail}">
 
    <div class="card-body">
+
     <div class="card-title">${item.title}</div>
+
     <div class="card-author">${item.author}</div>
+
     <div class="card-rating">★ ${item.rating}</div>
+
     <div>
     ${(item.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join("")}
     </div>
+
    </div>
   `;
 
@@ -141,8 +152,17 @@ document.addEventListener("DOMContentLoaded",()=>{
  const search=document.getElementById("searchInput");
 
  search.addEventListener("input",e=>{
+
   searchQuery=e.target.value;
+
+  if(searchQuery.trim().length>=2){
+   activeDay="전체";
+   activeTags=[];
+   renderFilters();
+  }
+
   renderCards();
+
  });
 
  loadData();
