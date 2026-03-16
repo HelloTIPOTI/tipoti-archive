@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BL ARCHIVE</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+<h1>BL ARCHIVE</h1>
+<input id="search" placeholder="제목 / 작가 검색">
+</header>
+
+<div class="filters">
+<div id="dayFilter">
+<button data-day="all" class="active">전체</button>
+<button data-day="월">월</button>
+<button data-day="화">화</button>
+<button data-day="수">수</button>
+<button data-day="목">목</button>
+<button data-day="금">금</button>
+<button data-day="토">토</button>
+<button data-day="일">일</button>
+</div>
+
+<div id="tagFilter"></div>
+</div>
+
+<main id="grid"></main>
+
+<script src="script.js"></script>
+</body>
+</html>
