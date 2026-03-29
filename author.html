@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>AUTHOR</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icons/archive0.png">
+</head>
+<body>
+<header class="site-header">
+<div class="brand"><a href="index.html">ARCHIVE</a></div>
+<div class="header-actions">
+  <a href="main.html" class="circle-btn home-circle"></a>
+  <a href="index.html" class="circle-btn board-circle"></a>
+  <a href="time.html" class="circle-btn time-circle"></a>
+  <a href="drama.html" class="circle-btn drama-circle"></a>
+  <a href="ms.html" class="circle-btn ms-circle"></a>
+  <a href="favorites.html" class="circle-btn fav-circle"></a>
+  <a href="admin.html" class="circle-btn admin-circle"></a>
+</div>
+</header>
+<div class="page">
+<a href="javascript:history.back()" class="back-link">← 돌아가기</a>
+<h2 id="name"></h2>
+<div id="list" class="card-grid"></div>
+</div>
+<script>
+const author=localStorage.getItem("selectedAuthor");
+document.getElementById("name").textContent=author;
+const data=JSON.parse(localStorage.getItem("userData")||"[]");
+data.forEach(item=>{
+ if(item.artist===author||item.writer===author||item.author===author){
+  const div=document.createElement("div");
+  div.className="card";
+  div.innerHTML = `
+  <img class="card-thumb" src="${item.thumbnail || ""}">
+  <div class="card-body">
+    <div class="card-title">${item.title || ""}</div>
+    <div class="card-rating">★ ${item.rating || ""}</div>
+  </div>
+`;
+  div.onclick=()=>{
+    localStorage.setItem("selectedItem",JSON.stringify(item));
+    location.href="detail.html";
+  };
+  document.getElementById("list").appendChild(div);
+ }
+});
+</script>
+
+<button id="scrollTopBtn">▲</button>
+<button id="scrollBottomBtn">▼</button>
+</body>
+</html>

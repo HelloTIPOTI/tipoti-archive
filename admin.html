@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>ADMIN</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icons/archive0.png">
+</head>
+
+<body>
+
+<header class="site-header">
+<div class="brand"><a href="index.html">ARCHIVE</a></div>
+<div class="header-actions">
+  <a href="main.html" class="circle-btn home-circle"></a>
+  <a href="index.html" class="circle-btn board-circle"></a>
+  <a href="time.html" class="circle-btn time-circle"></a>
+  <a href="drama.html" class="circle-btn drama-circle"></a>
+  <a href="ms.html" class="circle-btn ms-circle"></a>
+  <a href="favorites.html" class="circle-btn fav-circle"></a>
+  <a href="admin.html" class="circle-btn admin-circle"></a>
+</div>
+</header>
+
+<div class="page">
+
+<div class="admin-panel">
+
+<div class="admin-title">웹툰 추가</div>
+
+<div class="admin-form">
+
+<input id="title" placeholder="작품명">
+
+<input id="artist" placeholder="그림작가">
+<input id="writer" placeholder="스토리작가">
+
+<input id="rating" placeholder="평점">
+
+<input id="category" placeholder="카테고리">
+<input id="episodes" placeholder="회차">
+<input id="size" placeholder="용량">
+
+<input id="type" placeholder="단행본 / 스크롤">
+<input id="tags" placeholder="태그 (쉼표 구분)">
+
+<input id="note" placeholder="비고 (자유 입력)">
+
+<input id="thumbName" placeholder="이미지 파일명 (예: 001.jpg)">
+<input id="imageNames" placeholder="이미지 여러개 (쉼표 구분, 예: 001.jpg,002.jpg)">
+
+<img id="preview" style="width:120px; border-radius:10px; margin-top:5px; display:none;">
+
+<button id="submitBtn" onclick="generate()">+ 작품 추가</button>
+
+</div>
+
+<div class="admin-title">data.json에 붙여넣기</div>
+
+<textarea id="output" class="json-output"></textarea>
+
+<div class="admin-title">등록된 작품</div>
+
+<button onclick="downloadBackup()" style="margin-bottom:20px;">
+  📥 전체 데이터 백업 다운로드
+</button>
+
+<input type="file" id="importFile" accept=".json" style="margin-bottom:10px;">
+<button onclick="importBackup()" style="margin-bottom:20px;">
+  📤 백업 파일 복구
+</button>
+
+<div id="adminList"></div>
+
+</div>
+
+</div>
+
+<script type="module" src="admin.js"></script>
+
+</body>
+</html>

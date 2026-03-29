@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>ARCHIVE</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="icons/archive0.png">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand"><a href="index.html">ARCHIVE</a></div>
+  <div class="header-actions">
+    <a href="main.html" class="circle-btn home-circle"></a>
+    <a href="index.html" class="circle-btn board-circle"></a>
+    <a href="time.html" class="circle-btn time-circle"></a>
+    <a href="drama.html" class="circle-btn drama-circle"></a>
+    <a href="ms.html" class="circle-btn ms-circle"></a>
+    <a href="favorites.html" class="circle-btn fav-circle"></a>
+    <a href="admin.html" class="circle-btn admin-circle"></a>
+  </div>
+</header>
+
+<div class="page">
+  <div class="detail-wrap" id="detailWrap">
+    <a href="javascript:history.back()" class="back-link">← 아카이브로 돌아가기</a>
+	<span class="detail-edit-text" id="editBtn">수정하기 →</span>
+
+    <div class="detail-grid">
+      <img id="thumb" class="detail-cover" src="" alt="썸네일">
+
+      <div>
+        <div id="title" class="detail-title"></div>
+
+        <div class="meta-item">
+          <div class="meta-label">평점</div>
+          <div class="meta-value"><span class="detail-star">★</span> <span id="rating"></span></div>
+        </div>
+
+        <div class="meta-item">
+          <div class="meta-label">회차</div>
+          <div class="meta-value" id="episodes"></div>
+        </div>
+
+        <div class="meta-item">
+          <div class="meta-label">용량</div>
+          <div class="meta-value" id="size"></div>
+        </div>
+
+        <div class="meta-item">
+          <div class="meta-label">타입</div>
+          <div class="meta-value" id="type"></div>
+        </div>
+
+        <div class="meta-item">
+          <div class="meta-label">작가</div>
+          <div class="meta-value" id="author"></div>
+        </div>
+
+        <div class="meta-item">
+          <div class="meta-label">분류</div>
+          <div class="meta-value" id="category"></div>
+        </div>
+
+        <div class="meta-item">
+          <div class="meta-label">태그</div>
+          <div class="meta-value" id="tags"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const item = JSON.parse(localStorage.getItem("selectedItem"));
+
+if (item) {
+  document.getElementById("title").textContent = item.title || "";
+
+  let authorText = "";
+  if (item.artist && item.writer) {
+    authorText = item.artist + " / " + item.writer;
+  } else if (item.artist) {
+    authorText = item.artist;
+  } else if (item.writer) {
+    authorText = item.writer;
+  }
+
+  
+const wrap=document.getElementById("author");
+wrap.innerHTML="";
+(authorText.split(" / ")).forEach((n,i,arr)=>{
+ const s=document.createElement("span");
+ s.className="author-link";
+ s.textContent=n;
+ s.onclick=()=>{
+   localStorage.setItem("selectedAuthor",n);
+   location.href="author.html";
+ };
+ wrap.appendChild(s);
+ if(i<arr.length-1) wrap.appendChild(document.createTextNode(" / "));
+});
+
+  document.getElementById("rating").textContent = item.rating || "";
+  document.getElementById("episodes").textContent = item.episodes || "";
+  document.getElementById("size").textContent = item.size || "";
+  document.getElementById("type").textContent = item.type || "";
+  document.getElementById("category").textContent = item.category || item.day || "";
+
+  const tagWrap = document.getElementById("tags");
+  tagWrap.innerHTML = "";
+
+  (item.tags || []).forEach(tag => {
+    if (tag && String(tag).trim() !== "") {
+      const span = document.createElement("span");
+      span.className = "tag";
+      span.textContent = "#" + tag;
+      tagWrap.appendChild(span);
+    }
+  });
+
+  // 🔥 핵심 슬라이드 (썸네일 자리 재사용)
+  let images = [];
+
+  if (item.thumbnail) images.push(item.thumbnail);
+  if (item.images && item.images.length > 0) {
+    images = images.concat(item.images);
+  }
+
+  images = [...new Set(images)];
+
+  const img = document.getElementById("thumb");
+
+if (images.length > 0) {
+  let current = 0;
+  const img = document.getElementById("thumb");
+
+  img.src = images[current];
+
+  // 🔥 이미지 감싸기 (버튼을 위에 올리기 위해)
+  const wrap = document.createElement("div");
+  wrap.className = "slide-wrap";
+
+  img.parentNode.insertBefore(wrap, img);
+  wrap.appendChild(img);
+
+  // 버튼 생성
+  const prev = document.createElement("button");
+  const next = document.createElement("button");
+
+  prev.className = "slide-btn slide-prev";
+  next.className = "slide-btn slide-next";
+
+  prev.innerHTML = "‹";
+  next.innerHTML = "›";
+
+  prev.onclick = () => {
+    current = (current - 1 + images.length) % images.length;
+    img.src = images[current];
+  };
+
+  next.onclick = () => {
+    current = (current + 1) % images.length;
+    img.src = images[current];
+  };
+
+  wrap.appendChild(prev);
+  wrap.appendChild(next);
+}
+
+} else {
+  document.getElementById("detailWrap").innerHTML =
+    '<a href="index.html" class="back-link">← 아카이브로 돌아가기</a><p>작품 정보를 찾을 수 없습니다.</p>';
+}
+
+document.getElementById("editBtn")?.addEventListener("click", function(){
+  if (!item) return;
+  localStorage.setItem("archive_editTarget", JSON.stringify(item));
+  location.href = "admin.html";
+});
+</script>
+
+</body>
+</html>
