@@ -9,7 +9,8 @@ const firebaseConfig = {
     projectId: "my-archive-00",
     storageBucket: "my-archive-00.firebasestorage.app",
     messagingSenderId: "626393416245",
-    appId: "1:626393416245:web:0d0b6fbd8fe76d2f77277c"
+    appId: "1:626393416245:web:0d0b6fbd8fe76d2f77277c",
+	databaseURL: "https://my-archive-00-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 // 3. Firebase 초기화
@@ -85,7 +86,7 @@ async function renderList() {
 /* =========================
    추가 / 수정 (Firebase 저장)
 ========================= */
-window.generate = async function() { // HTML에서 호출할 수 있도록 window에 바인딩
+export const generate = window.generate = async function() { // HTML에서 호출할 수 있도록 window에 바인딩
     const title = document.getElementById("title").value.trim();
     const thumbName = document.getElementById("thumbName").value.trim(); // 이제 여기에 깃허브 주소를 넣습니다.
 
