@@ -1,4 +1,3 @@
-// 1. Firebase 라이브러리 및 설정 (admin.js와 동일하게 맞춰줍니다)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -15,10 +14,18 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-let BASE_DATA = []; // Firebase에서 가져온 원본 데이터를 저장할 곳
+let BASE_DATA = []; 
+let visibleCount = 20;
+const STEP = 20;
+
+let currentState = {
+    search: "",
+    categories: [],
+    tags: []
+};
 
 /* =========================
-   데이터 가져오기 (Firebase 연동)
+   데이터 가져오기
 ========================= */
 async function fetchFirebaseData() {
     const dbRef = ref(db);
@@ -26,30 +33,21 @@ async function fetchFirebaseData() {
         const snapshot = await get(child(dbRef, 'userData'));
         if (snapshot.exists()) {
             const data = snapshot.val();
-            // Firebase의 객체 데이터를 배열로 변환
             BASE_DATA = Object.keys(data).map(key => ({
                 id: key,
                 ...data[key]
-            })).reverse(); // 최신순 정렬
+            })).reverse();
             return BASE_DATA;
         }
         return [];
     } catch (error) {
-        console.error("💥 Firebase 데이터 로드 실패:", error);
+        console.error("💥 Firebase 로드 실패:", error);
         return [];
     }
 }
 
-// 기존 getAllData 함수를 Firebase 데이터를 사용하도록 수정
-function getAllData() {
-    return BASE_DATA.map(normalizeItem);
-}
-
-/* =========================
-   데이터 정규화 (기존 로직 유지)
-========================= */
-function normalizeItem(item) {
-    if (!item) return null;
+function normalizeItem(item){
+    if(!item) return null;
     return {
         ...item,
         artist: item.artist || "",
@@ -57,68 +55,157 @@ function normalizeItem(item) {
         category: item.category || "",
         tags: Array.isArray(item.tags) ? item.tags.filter(Boolean) : [],
         images: Array.isArray(item.images) ? item.images.filter(Boolean) : [],
-        thumbnail: item.thumbnail || "" // 깃허브 주소
+        thumbnail: item.thumbnail || ""
     };
 }
 
-// ... (중략: getAuthorNames, getFavorites, toggleFavorite 등 기존 로직은 동일하게 유지) ...
+function getAllData() {
+    return BASE_DATA.map(normalizeItem);
+}
+
+function getFavorites() {
+    return JSON.parse(localStorage.getItem("favorites") || "[]");
+}
 
 /* =========================
-   상태 관리 및 필터 로직 (기존 유지)
+   필터링 로직
 ========================= */
-let currentState = { search: "", categories: [], tags: [] };
-// (중략: savedState 로직 유지)
-
 function getFilteredData() {
     let list = getAllData();
-    // (중략: 검색 및 카테고리 필터 로직 유지)
+
+    if (currentState.search.length >= 2) {
+        const q = currentState.search.toLowerCase();
+        return list.filter(item =>
+            (item.title || "").toLowerCase().includes(q) ||
+            (item.artist || "").toLowerCase().includes(q) ||
+            (item.writer || "").toLowerCase().includes(q)
+        );
+    }
+
+    if (currentState.categories.length > 0) {
+        list = list.filter(item => currentState.categories.includes(item.category));
+    }
+
+    if (currentState.tags.length > 0) {
+        list = list.filter(item => (item.tags || []).some(tag => currentState.tags.includes(tag)));
+    }
+
     return list;
 }
 
 /* =========================
-   카드 렌더링 (기존 유지)
+   ⭐⭐ 핵심: 삭제되었던 검색 초기화 함수 (initSearch)
+========================= */
+function initSearch() {
+    const input = document.getElementById("searchInput");
+    if (!input) return;
+
+    input.value = currentState.search;
+
+    input.addEventListener("input", (e) => {
+        visibleCount = 20;
+        currentState.search = e.target.value.trim();
+        update(); // 검색할 때마다 화면 갱신
+    });
+}
+
+/* =========================
+   카드 렌더링
 ========================= */
 function renderCards(list) {
     const wrap = document.getElementById("cards");
+    const count = document.getElementById("resultCount");
     if (!wrap) return;
+
     wrap.innerHTML = "";
-    // ... (기존 카드 생성 코드 그대로 사용) ...
+    const favList = getFavorites();
+
+    list.forEach((item) => {
+        if (!item) return;
+
+        const isFav = favList.includes(item.title);
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <div class="fav-btn ${isFav ? "active":""}"></div>
+            <img class="card-thumb" src="${item.thumbnail || ""}">
+            <div class="card-body">
+                <div class="card-title">${item.title || ""}</div>
+                <div class="card-author">${item.artist || item.writer || ""}</div>
+                <div class="card-rating">★ ${item.rating || ""}</div>
+            </div>
+        `;
+
+        card.onclick = () => {
+            localStorage.setItem("selectedItem", JSON.stringify(item));
+            location.href = `detail.html?id=${item.id}`;
+        };
+
+        wrap.appendChild(card);
+    });
+
+    if (count) count.textContent = `${list.length}개 작품`;
 }
 
-// ... (중략: renderFilters, initSearch 등 UI 관련 함수 유지) ...
+/* =========================
+   필터 UI 렌더링
+========================= */
+function renderFilters() {
+    const categoryWrap = document.getElementById("categoryFilter");
+    if (!categoryWrap) return;
+    categoryWrap.innerHTML = "";
+
+    const categories = ["전체", "00", "AZ", "ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"];
+
+    categories.forEach(category => {
+        const el = document.createElement("div");
+        const isActive = (category === "전체" && currentState.categories.length === 0) || currentState.categories.includes(category);
+        el.className = "pill" + (isActive ? " active" : "");
+        el.textContent = category;
+        el.onclick = () => {
+            visibleCount = 20;
+            currentState.categories = (category === "전체") ? [] : [category];
+            update();
+        };
+        categoryWrap.appendChild(el);
+    });
+}
 
 /* =========================
-   전체 업데이트 (핵심!)
+   더보기 버튼
+========================= */
+function renderLoadMore(total) {
+    let btn = document.getElementById("loadMoreBtn");
+    if (visibleCount >= total) {
+        if (btn) btn.style.display = "none";
+    } else {
+        if (btn) btn.style.display = "inline-block";
+    }
+}
+
+/* =========================
+   전체 업데이트 함수
 ========================= */
 async function update() {
-    // 1. 데이터를 먼저 가져옵니다 (처음 한 번만 실행되거나 업데이트 시 실행)
     if (BASE_DATA.length === 0) {
         await fetchFirebaseData();
     }
-    
     const filtered = getFilteredData();
     renderFilters();
     renderCards(filtered.slice(0, visibleCount));
     renderLoadMore(filtered.length);
-    // updateFavBadge(); // 필요한 경우 활성화
 }
 
 /* =========================
-   실행 (DOMContentLoaded)
+   실행부 (DOMContentLoaded)
 ========================= */
 document.addEventListener("DOMContentLoaded", async () => {
-    const isFavoritesPage = location.pathname.includes("favorites.html");
-
-    // 🚀 페이지 접속 시 데이터를 먼저 가져옵니다.
+    // 1. 데이터 먼저 가져오기
     await fetchFirebaseData();
-
-    if (isFavoritesPage) {
-        renderFavoritesPage();
-        return;
-    }
-
+    
+    // 2. 검색창 연결 (에러 났던 부분 해결)
     initSearch();
+    
+    // 3. 화면 그리기
     update();
 });
-
-// ... (나머지 스크롤 및 즐겨찾기 로직 그대로 하단에 배치) ...
