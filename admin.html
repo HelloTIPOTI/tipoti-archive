@@ -23,60 +23,46 @@
 </header>
 
 <div class="page">
-
 <div class="admin-panel">
-
 <div class="admin-title">웹툰 추가</div>
-
 <div class="admin-form">
-
 <input id="title" placeholder="작품명">
-
 <input id="artist" placeholder="그림작가">
 <input id="writer" placeholder="스토리작가">
-
 <input id="rating" placeholder="평점">
-
 <input id="category" placeholder="카테고리">
 <input id="episodes" placeholder="회차">
 <input id="size" placeholder="용량">
-
 <input id="type" placeholder="단행본 / 스크롤">
 <input id="tags" placeholder="태그 (쉼표 구분)">
-
 <input id="note" placeholder="비고 (자유 입력)">
-
 <input id="thumbName" placeholder="이미지 파일명 (예: 001.jpg)">
 <input id="imageNames" placeholder="이미지 여러개 (쉼표 구분, 예: 001.jpg,002.jpg)">
 
 <img id="preview" style="width:120px; border-radius:10px; margin-top:5px; display:none;">
 
-<button id="submitBtn" onclick="generate()">+ 작품 추가</button>
-
+<button id="submitBtn">+ 작품 추가</button>
 </div>
-
-<div class="admin-title">data.json에 붙여넣기</div>
-
-<textarea id="output" class="json-output"></textarea>
 
 <div class="admin-title">등록된 작품</div>
 
-<button onclick="downloadBackup()" style="margin-bottom:20px;">
-  📥 전체 데이터 백업 다운로드
-</button>
-
-<input type="file" id="importFile" accept=".json" style="margin-bottom:10px;">
-<button onclick="importBackup()" style="margin-bottom:20px;">
-  📤 백업 파일 복구
-</button>
-
 <div id="adminList"></div>
-
 </div>
-
 </div>
 
 <script type="module" src="admin.js"></script>
+
+<button id="submitBtn">+ 작품 추가</button>
+
+<script type="module">
+  import { generate } from './admin.js';
+  // 버튼 클릭 시 window.generate()가 실행되도록 연결
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    if (typeof window.generate === 'function') {
+      window.generate();
+    }
+  });
+</script>
 
 </body>
 </html>
