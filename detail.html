@@ -24,10 +24,12 @@
 <div class="page">
   <div class="detail-wrap" id="detailWrap">
     <a href="javascript:history.back()" class="back-link">← 아카이브로 돌아가기</a>
-	<span class="detail-edit-text" id="editBtn">수정하기 →</span>
+    <span class="detail-edit-text" id="editBtn" style="cursor:pointer; float:right;">수정하기 →</span>
 
     <div class="detail-grid">
-      <img id="thumb" class="detail-cover" src="" alt="썸네일">
+      <div id="imageContainer" style="position:relative;">
+        <img id="thumb" class="detail-cover" src="" alt="썸네일">
+      </div>
 
       <div>
         <div id="title" class="detail-title"></div>
@@ -72,112 +74,62 @@
 </div>
 
 <script>
+// localStorage에서 선택된 아이템 가져오기
 const item = JSON.parse(localStorage.getItem("selectedItem"));
 
 if (item) {
   document.getElementById("title").textContent = item.title || "";
-
-  let authorText = "";
-  if (item.artist && item.writer) {
-    authorText = item.artist + " / " + item.writer;
-  } else if (item.artist) {
-    authorText = item.artist;
-  } else if (item.writer) {
-    authorText = item.writer;
-  }
-
-  
-const wrap=document.getElementById("author");
-wrap.innerHTML="";
-(authorText.split(" / ")).forEach((n,i,arr)=>{
- const s=document.createElement("span");
- s.className="author-link";
- s.textContent=n;
- s.onclick=()=>{
-   localStorage.setItem("selectedAuthor",n);
-   location.href="author.html";
- };
- wrap.appendChild(s);
- if(i<arr.length-1) wrap.appendChild(document.createTextNode(" / "));
-});
-
   document.getElementById("rating").textContent = item.rating || "";
   document.getElementById("episodes").textContent = item.episodes || "";
   document.getElementById("size").textContent = item.size || "";
   document.getElementById("type").textContent = item.type || "";
-  document.getElementById("category").textContent = item.category || item.day || "";
+  document.getElementById("category").textContent = item.category || "";
 
-  const tagWrap = document.getElementById("tags");
-  tagWrap.innerHTML = "";
+  // 작가 링크 생성
+  const authorWrap = document.getElementById("author");
+  authorWrap.innerHTML = "";
+  const authors = [];
+  if (item.artist) authors.push(item.artist);
+  if (item.writer && item.writer !== item.artist) authors.push(item.writer);
 
-  (item.tags || []).forEach(tag => {
-    if (tag && String(tag).trim() !== "") {
-      const span = document.createElement("span");
-      span.className = "tag";
-      span.textContent = "#" + tag;
-      tagWrap.appendChild(span);
-    }
+  authors.forEach((name, i) => {
+    const span = document.createElement("span");
+    span.className = "author-link";
+    span.style.cursor = "pointer";
+    span.style.color = "#007bff";
+    span.textContent = name;
+    span.onclick = () => {
+      localStorage.setItem("selectedAuthor", name);
+      location.href = "author.html";
+    };
+    authorWrap.appendChild(span);
+    if (i < authors.length - 1) authorWrap.appendChild(document.createTextNode(" / "));
   });
 
-  // 🔥 핵심 슬라이드 (썸네일 자리 재사용)
-  let images = [];
+  // 태그 생성
+  const tagWrap = document.getElementById("tags");
+  (item.tags || []).forEach(tag => {
+    const span = document.createElement("span");
+    span.className = "tag";
+    span.textContent = "#" + tag;
+    tagWrap.appendChild(span);
+  });
 
-  if (item.thumbnail) images.push(item.thumbnail);
-  if (item.images && item.images.length > 0) {
-    images = images.concat(item.images);
-  }
-
-  images = [...new Set(images)];
-
+  // 이미지 슬라이드 로직
   const img = document.getElementById("thumb");
-
-if (images.length > 0) {
-  let current = 0;
-  const img = document.getElementById("thumb");
-
-  img.src = images[current];
-
-  // 🔥 이미지 감싸기 (버튼을 위에 올리기 위해)
-  const wrap = document.createElement("div");
-  wrap.className = "slide-wrap";
-
-  img.parentNode.insertBefore(wrap, img);
-  wrap.appendChild(img);
-
-  // 버튼 생성
-  const prev = document.createElement("button");
-  const next = document.createElement("button");
-
-  prev.className = "slide-btn slide-prev";
-  next.className = "slide-btn slide-next";
-
-  prev.innerHTML = "‹";
-  next.innerHTML = "›";
-
-  prev.onclick = () => {
-    current = (current - 1 + images.length) % images.length;
-    img.src = images[current];
+  img.src = item.thumbnail || "";
+  
+  // 수정하기 버튼 클릭 시
+  document.getElementById("editBtn").onclick = () => {
+    // Firebase 수정을 위해 item 전체를 넘깁니다. 
+    // admin.js에서 이 데이터를 받아 처리할 수 있습니다.
+    localStorage.setItem("editItemData", JSON.stringify(item));
+    location.href = "admin.html";
   };
-
-  next.onclick = () => {
-    current = (current + 1) % images.length;
-    img.src = images[current];
-  };
-
-  wrap.appendChild(prev);
-  wrap.appendChild(next);
-}
 
 } else {
-  document.getElementById("detailWrap").innerHTML =
-    '<a href="index.html" class="back-link">← 아카이브로 돌아가기</a><p>작품 정보를 찾을 수 없습니다.</p>';
+  document.getElementById("detailWrap").innerHTML = '<p>정보를 불러올 수 없습니다.</p>';
 }
-
-document.getElementById("editBtn")?.addEventListener("click", function(){
-  if (!item) return;
-  localStorage.setItem("archive_editTarget", JSON.stringify(item));
-  location.href = "admin.html";
-});
 </script>
 
 </body>
